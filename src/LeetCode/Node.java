@@ -1,3 +1,4 @@
+package LeetCode;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -6,7 +7,7 @@ import java.util.Set;
 import java.util.Vector;
 
 public class Node {
-  Vector<Node> neighbors;
+  public Vector<Node> neighbors;
   
   public Node() {
     neighbors = new Vector<>();
@@ -29,12 +30,11 @@ public class Node {
       }
       
       for(Node cursor : next.neighbors) {
-        if(mapping.containsKey(cursor)) {
-          newNode.neighbors.addElement(mapping.get(cursor));
-        } else {
+        if(!mapping.containsKey(cursor)) {
           Node cursorClone = new Node();
           mapping.put(cursor, cursorClone);
         }
+        newNode.neighbors.addElement(mapping.get(cursor));
         
         if(!visited.contains(cursor)) {
           boundary.add(cursor);
@@ -45,5 +45,26 @@ public class Node {
     }
     
     return mapping.get(this);
+  }
+  
+  public int graphSize() {
+    Queue<Node> boundary = new LinkedList<>();
+    Set<Node> visited = new HashSet<>();
+    
+    boundary.add(this);
+    
+    while(!boundary.isEmpty()) {
+      Node next = boundary.poll();
+      
+      for(Node cursor : next.neighbors) {
+        if(!visited.contains(cursor)) {
+          boundary.add(cursor);
+        }
+      }
+      
+      visited.add(next);
+    }
+    
+    return visited.size();
   }
 }
